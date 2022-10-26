@@ -12,11 +12,13 @@ from Controladores.ControladorMesa import ControladorMesa
 from Controladores.ControladorCandidato import ControladorCandidato
 from Controladores.ControladorPartido import ControladorPartido
 from Controladores.ControladorResultado import ControladorResultado
+from Controladores.ControladorDepartamento import ControladorDepartamento
 
 miControlMesa = ControladorMesa()
 miControlCandidato = ControladorCandidato()
 miControlPartido = ControladorPartido()
 miControlResultado = ControladorResultado()
+miControlDepartamento = ControladorDepartamento()
 
 #################################################################################
 
@@ -143,7 +145,34 @@ def eliminarResultados(id):
     return jsonify(json)
 
 ###############################################################################
+@app.route("/departamentos", methods=['GET'])
+def getDepartamentos():
+    json = miControlDepartamento.index()
+    return jsonify(json)
 
+@app.route("/departamentos", methods=['POST'])
+def crearDepartamentos():
+    data = request.get_json()
+    json = miControlDepartamento.create(data)
+    return jsonify(json)
+
+@app.route("/departamentos/<string:id>", methods=['GET'])
+def getDepartamento(id):
+    json = miControlDepartamento.show(id)
+    return jsonify(json)
+
+@app.route("/departamentos/<string:id>", methods=['PUT'])
+def modificarDepartamentos(id):
+    data = request.get_json()
+    json = miControlDepartamento.update(id, data)
+    return jsonify(json)
+
+@app.route("/departamentos/<string:id>", methods=['DELETE'])
+def eliminarDepartamentos(id):
+    json = miControlDepartamento.delete(id)
+    return jsonify(json)
+
+###############################################################################
 def loadFileConfig():
     with open('Config.json') as f:
         data = json.load(f)
