@@ -7,21 +7,20 @@ import json
 
 from Routes.Partido import partido
 from Routes.Candidato import candidato
-
+from Routes.Departamento import departamento
+from Routes.Mesa import mesa
 
 app = Flask(__name__)
 cors = CORS(app)
 
 app.register_blueprint(partido)
 app.register_blueprint(candidato)
+app.register_blueprint(departamento)
+app.register_blueprint(mesa)
 
-from Controladores.ControladorMesa import ControladorMesa
 from Controladores.ControladorResultado import ControladorResultado
-from Controladores.ControladorDepartamento import ControladorDepartamento
 
-miControlMesa = ControladorMesa()
 miControlResultado = ControladorResultado()
-miControlDepartamento = ControladorDepartamento()
 
 #################################################################################
 
@@ -32,36 +31,6 @@ def test():
     return jsonify(json)
 
 ################################################################################
-
-@app.route("/mesas", methods=['GET'])
-def getMesas():
-    json = miControlMesa.index()
-    return jsonify(json)
-
-@app.route("/mesas", methods=['POST'])
-def crearMesas():
-    data = request.get_json()
-    json = miControlMesa.create(data)
-    return jsonify(json)
-
-@app.route("/mesas/<string:id>", methods=['GET'])
-def getMesa(id):
-    json = miControlMesa.show(id)
-    return jsonify(json)
-
-@app.route("/mesas/<string:id>", methods=['PUT'])
-def modificarMesas(id):
-    data = request.get_json()
-    json = miControlMesa.update(id, data)
-    return jsonify(json)
-
-@app.route("/mesas/<string:id>", methods=['DELETE'])
-def eliminarMesas(id):
-    json = miControlMesa.delete(id)
-    return jsonify(json)
-
-###############################################################################
-
 @app.route("/resultados", methods=['GET'])
 def getResultados():
     json = miControlResultado.index()
@@ -87,34 +56,6 @@ def modificarResultados(id):
 @app.route("/resultados/<string:id>", methods=['DELETE'])
 def eliminarResultados(id):
     json = miControlResultado.delete(id)
-    return jsonify(json)
-
-###############################################################################
-@app.route("/departamentos", methods=['GET'])
-def getDepartamentos():
-    json = miControlDepartamento.index()
-    return jsonify(json)
-
-@app.route("/departamentos", methods=['POST'])
-def crearDepartamentos():
-    data = request.get_json()
-    json = miControlDepartamento.create(data)
-    return jsonify(json)
-
-@app.route("/departamentos/<string:id>", methods=['GET'])
-def getDepartamento(id):
-    json = miControlDepartamento.show(id)
-    return jsonify(json)
-
-@app.route("/departamentos/<string:id>", methods=['PUT'])
-def modificarDepartamentos(id):
-    data = request.get_json()
-    json = miControlDepartamento.update(id, data)
-    return jsonify(json)
-
-@app.route("/departamentos/<string:id>", methods=['DELETE'])
-def eliminarDepartamentos(id):
-    json = miControlDepartamento.delete(id)
     return jsonify(json)
 
 ###############################################################################

@@ -1,9 +1,12 @@
 from Repositorios.RepositorioMesa import RepositorioMesa
+from Repositorios.RepositorioDepartamento import RepositorioDepartamento
 from Models.mesa import Mesa
+from Models.Departamento import Departamento
 
 class ControladorMesa():
     def __init__(self):
         self.repositorioMesa = RepositorioMesa()
+        self.repositorioDepartamento = RepositorioDepartamento()
 
     def index(self):
         return self.repositorioMesa.findAll()
@@ -25,4 +28,12 @@ class ControladorMesa():
 
     def delete(self, id):
         return self.repositorioMesa.delete(id)
-        
+
+    """
+    Relacion departamento y mesa
+    """
+    def asignarDepartamento(self, id, id_departamento):
+        mesaActual = Mesa(self.repositorioMesa.findById(id))
+        departamentoActual = Departamento(self.repositorioDepartamento.findById(id_departamento))
+        mesaActual.id_departamento = departamentoActual
+        return self.repositorioMesa.save(mesaActual)
