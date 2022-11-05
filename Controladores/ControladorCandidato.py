@@ -17,19 +17,37 @@ class ControladorCandidato():
         return self.repositorioCandidatos.save(nuevoCandidato)
 
     def show(self, id):
-        elCandidato = Candidatos(self.repositorioCandidatos.findById(id))
-        return elCandidato.__dict__
+        try:
+            elCandidato = Candidatos(self.repositorioCandidatos.findById(id))
+            return elCandidato.__dict__
+        except Exception as e:
+            response_object = {
+                "message": 'Candidato no encontrado'
+            }
+            return response_object, 400
 
     def update(self, id, infoCandidatos):
-        candidatoActual = Candidatos(self.repositorioCandidatos.findById(id))
-        candidatoActual.cedula = infoCandidatos["cedula"]
-        candidatoActual.numero_resolucion = infoCandidatos["numero_resolucion"]
-        candidatoActual.nombre = infoCandidatos["nombre"]
-        candidatoActual.apellido = infoCandidatos["apellido"]
-        return self.repositorioCandidatos.save(candidatoActual)
+        try:
+            candidatoActual = Candidatos(self.repositorioCandidatos.findById(id))
+            candidatoActual.cedula = infoCandidatos["cedula"]
+            candidatoActual.numero_resolucion = infoCandidatos["numero_resolucion"]
+            candidatoActual.nombre = infoCandidatos["nombre"]
+            candidatoActual.apellido = infoCandidatos["apellido"]
+            return self.repositorioCandidatos.save(candidatoActual)
+        except Exception as e:
+            response_object = {
+                "message": 'Candidato no pudo ser actualizado'
+            }
+            return response_object, 400
 
     def delete(self, id):
-        return self.repositorioCandidatos.delete(id)
+        try:
+            return self.repositorioCandidatos.delete(id)
+        except Exception as ed:
+            response_object = {
+                "message": 'Candidato no pudo ser eliminado'
+            }
+            return response_object, 400
 
 # Relación Partido y Candidato
 

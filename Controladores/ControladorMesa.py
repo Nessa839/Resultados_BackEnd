@@ -15,19 +15,38 @@ class ControladorMesa():
         nuevaMesa = Mesa(infoMesa)
         return self.repositorioMesa.save(nuevaMesa)
 
+
     def show(self, id):
-        laMesa = Mesa(self.repositorioMesa.findById(id))
-        return laMesa.__dict__
+        try:
+            laMesa = Mesa(self.repositorioMesa.findById(id))
+            return laMesa.__dict__
+        except Exception as e:
+            response_object = {
+                "message": 'Mesa no encontrada'
+            }
+            return response_object, 400
 
     def update(self, id, infoMesa):
-        mesaActual = Mesa(self.repositorioMesa.findById(id))
-        mesaActual.numero_mesa = infoMesa["numero_mesa"]
-        mesaActual.departamento = infoMesa["departamento"]
-        mesaActual.inscritos = infoMesa["inscritos"]
-        return self.repositorioMesa.save(mesaActual)
+        try:
+            mesaActual = Mesa(self.repositorioMesa.findById(id))
+            mesaActual.numero_mesa = infoMesa["numero_mesa"]
+            mesaActual.numero_inscritos = infoMesa["numero_inscritos"]
+            return self.repositorioMesa.save(mesaActual)
+        except Exception as ex:
+            response_object = {
+                "message": 'Mesa no pudo ser actualizada'
+            }
+            return response_object, 400
 
     def delete(self, id):
-        return self.repositorioMesa.delete(id)
+        try:
+            return self.repositorioMesa.delete(id)
+        except Exception as ed:
+            response_object = {
+                "message": 'Mesa no pudo ser eliminada'
+            }
+            return response_object, 400
+
 
     """
     Relacion departamento y mesa

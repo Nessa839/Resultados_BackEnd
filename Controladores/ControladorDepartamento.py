@@ -13,14 +13,32 @@ class ControladorDepartamento():
         return self.repositorioDepartamento.save(nuevoDepartamento)
 
     def show(self, id):
-        elDepartamento = Departamento(self.repositorioDepartamento.findById(id))
-        return elDepartamento.__dict__
+        try:
+            elDepartamento = Departamento(self.repositorioDepartamento.findById(id))
+            return elDepartamento.__dict__
+        except Exception as ed:
+            response_object = {
+                "message": 'Departamento no encontrado'
+            }
+            return response_object, 400
 
     def update(self, id, infoDepartamento):
-        departamentoActual = Departamento(self.repositorioDepartamento.findById(id))
-        departamentoActual.nombre = infoDepartamento["nombre"]
-        departamentoActual.numero_candidatos = infoDepartamento["numero_candidatos"]
-        return self.repositorioDepartamento.save(departamentoActual)
+        try:
+            departamentoActual = Departamento(self.repositorioDepartamento.findById(id))
+            departamentoActual.nombre = infoDepartamento["nombre"]
+            departamentoActual.numero_candidatos = infoDepartamento["numero_candidatos"]
+            return self.repositorioDepartamento.save(departamentoActual)
+        except Exception as ed:
+            response_object = {
+                "message": 'Departamento no pudo ser actualizado'
+            }
+            return response_object, 400
 
     def delete(self, id):
-        return self.repositorioDepartamento.delete(id)
+        try:
+            return self.repositorioDepartamento.delete(id)
+        except Exception as ed:
+            response_object = {
+                "message": 'Departamento no pudo ser eliminado'
+            }
+            return response_object, 400

@@ -14,14 +14,32 @@ class ControladorPartido():
         return self.repositorioPartidos.save(nuevoPartido)
 
     def show(self, id):
-        elPartido = Partidos(self.repositorioPartidos.findById(id))
-        return elPartido.__dict__
+        try:
+            elPartido = Partidos(self.repositorioPartidos.findById(id))
+            return elPartido.__dict__
+        except Exception as ed:
+            response_object = {
+                "message": 'Partido no encontrado'
+            }
+            return response_object, 400
 
     def update(self, id, infoPartidos):
-        partidoActual = Partidos(self.repositorioPartidos.findById(id))
-        partidoActual.nombre_partido = infoPartidos["nombre_partido"]
-        partidoActual.lema_partido = infoPartidos["lema_partido"]
-        return self.repositorioPartidos.save(partidoActual)
+        try:
+            partidoActual = Partidos(self.repositorioPartidos.findById(id))
+            partidoActual.nombre_partido = infoPartidos["nombre_partido"]
+            partidoActual.lema_partido = infoPartidos["lema_partido"]
+            return self.repositorioPartidos.save(partidoActual)
+        except Exception as ed:
+            response_object = {
+                "message": 'Partido no pudo ser actualizado'
+            }
+            return response_object, 400
 
     def delete(self, id):
-        return self.repositorioPartidos.delete(id)
+        try:
+            return self.repositorioPartidos.delete(id)
+        except Exception as ed:
+            response_object = {
+                "message": 'Partido no pudo ser eliminado'
+            }
+            return response_object, 400
