@@ -31,6 +31,7 @@ def test():
     return jsonify(json)
 
 ################################################################################
+
 @app.route("/resultados", methods=['GET'])
 def getResultados():
     json = miControlResultado.index()
