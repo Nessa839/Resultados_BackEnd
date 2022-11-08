@@ -69,8 +69,6 @@ class InterfaceRepositorio(Generic[T]):
     def findByKey(self, key, value):
         laColeccion = self.baseDatos[self.coleccion]
         x = laColeccion.find_one({key: value})
-        if x == None:
-            x = {}
         return x
 
     def findAll(self):
