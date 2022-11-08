@@ -66,6 +66,13 @@ class InterfaceRepositorio(Generic[T]):
             x["_id"] = x["_id"].__str__()
         return x
 
+    def findByKey(self, key, value):
+        laColeccion = self.baseDatos[self.coleccion]
+        x = laColeccion.find_one({key: value})
+        if x == None:
+            x = {}
+        return x
+
     def findAll(self):
         laColeccion = self.baseDatos[self.coleccion]
         data = []

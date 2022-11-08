@@ -19,7 +19,7 @@ class ControladorResultado():
     def update(self, id, infoResultados):
         resultadoActual = Resultados(self.repositorioResultados.findById(id))
         resultadoActual.id_mesa = infoResultados["id_mesa"]
-        resultadoActual.id_partido = infoResultados["id_partido"]
+        resultadoActual.id_candidato = infoResultados["id_candidato"]
         resultadoActual.votos = infoResultados["votos"]
         return self.repositorioResultados.save(resultadoActual)
 

@@ -13,17 +13,23 @@ class ControladorCandidato():
         return self.repositorioCandidatos.findAll()
 
     def create(self, infoCandidatos):
+        if self.repositorioCandidatos.findByKey("cedula", infoCandidatos["cedula"]):
+            response_object = {"message": "La cedula ya esta asociada a otro candidato"}
+            return response_object
+        
+        if self.repositorioCandidatos.findByKey("numero_resolucion", infoCandidatos["numero_resolucion"]):
+            response_object = {"message": "El numero de resolucion ya esta asociado a otro candidato"}
+            return response_object
+
         nuevoCandidato = Candidatos(infoCandidatos)
-        return self.repositorioCandidatos.save(nuevoCandidato)
+        return self.repositorioCandidatos.save(nuevoCandidato) 
 
     def show(self, id):
         try:
             elCandidato = Candidatos(self.repositorioCandidatos.findById(id))
             return elCandidato.__dict__
         except Exception as e:
-            response_object = {
-                "message": 'Candidato no encontrado'
-            }
+            response_object = {"message": 'Candidato no encontrado'}
             return response_object, 400
 
     def update(self, id, infoCandidatos):
@@ -35,18 +41,14 @@ class ControladorCandidato():
             candidatoActual.apellido = infoCandidatos["apellido"]
             return self.repositorioCandidatos.save(candidatoActual)
         except Exception as e:
-            response_object = {
-                "message": 'Candidato no pudo ser actualizado'
-            }
+            response_object = {"message": 'Candidato no pudo ser actualizado'}
             return response_object, 400
 
     def delete(self, id):
         try:
             return self.repositorioCandidatos.delete(id)
         except Exception as ed:
-            response_object = {
-                "message": 'Candidato no pudo ser eliminado'
-            }
+            response_object = {"message": 'Candidato no pudo ser eliminado'}
             return response_object, 400
 
 # Relación Partido y Candidato
