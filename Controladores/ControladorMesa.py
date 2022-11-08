@@ -14,7 +14,7 @@ class ControladorMesa():
     def create(self, infoMesa):
         if self.repositorioMesa.findByKey("numero_mesa", infoMesa["numero_mesa"]):
             response_object = {"message": "La mesa ya existe"}
-            return response_object
+            return "HTTP 409 Conflict", response_object
         nuevaMesa = Mesa(infoMesa)
         return self.repositorioMesa.save(nuevaMesa)
 
@@ -24,7 +24,7 @@ class ControladorMesa():
             return laMesa.__dict__
         except Exception as e:
             response_object = {"message": 'Mesa no encontrada'}
-            return response_object, 400
+            return "HTTP 400 Bad Request", response_object
 
     def update(self, id, infoMesa):
         try:
@@ -33,20 +33,24 @@ class ControladorMesa():
             mesaActual.numero_inscritos = infoMesa["numero_inscritos"]
             return self.repositorioMesa.save(mesaActual)
         except Exception as ex:
-            response_object = {"message": 'Mesa no pudo ser actualizada'}
-            return response_object, 400
+            response_object = {"message": 'La mesa no pudo ser actualizada'}
+            return "HTTP 400 Bad Request", response_object
 
     def delete(self, id):
         try:
             return self.repositorioMesa.delete(id)
         except Exception as ed:
-            response_object = {"message": 'Mesa no pudo ser eliminada'}
-            return response_object, 400
+            response_object = {"message": 'La mesa no pudo ser eliminada'}
+            return "HTTP 400 Bad Request", response_object
 
 # Relacion departamento y mesa
     
     def asignarDepartamento(self, id, id_departamento):
-        mesaActual = Mesa(self.repositorioMesa.findById(id))
-        departamentoActual = Departamento(self.repositorioDepartamento.findById(id_departamento))
-        mesaActual.id_departamento = departamentoActual
-        return self.repositorioMesa.save(mesaActual)
+        try:
+            mesaActual = Mesa(self.repositorioMesa.findById(id))
+            departamentoActual = Departamento(self.repositorioDepartamento.findById(id_departamento))
+            mesaActual.id_departamento = departamentoActual
+            return self.repositorioMesa.save(mesaActual)
+        except:
+            response_object = {"message": 'No fue posible asignar la relacion'}
+            return "HTTP 400 Bad Request", response_object

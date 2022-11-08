@@ -12,7 +12,7 @@ class ControladorPartido():
     def create(self, infoPartidos):
         if self.repositorioPartidos.findByKey("nombre", infoPartidos["nombre"]):
             response_object = {"message": "El partido ya existe"}
-            return response_object
+            return "HTTP 409 Conflict", response_object
         nuevoPartido = Partidos(infoPartidos)
         return self.repositorioPartidos.save(nuevoPartido)
 
@@ -22,7 +22,7 @@ class ControladorPartido():
             return elPartido.__dict__
         except Exception as ed:
             response_object = {"message": 'Partido no encontrado'}
-            return response_object, 400
+            return "HTTP 400 Bad Request", response_object
 
     def update(self, id, infoPartidos):
         try:
@@ -31,12 +31,12 @@ class ControladorPartido():
             partidoActual.lema = infoPartidos["lema"]
             return self.repositorioPartidos.save(partidoActual)
         except Exception as ed:
-            response_object = {"message": 'Partido no pudo ser actualizado'}
-            return response_object, 400
+            response_object = {"message": 'El partido no pudo ser actualizado'}
+            return "HTTP 400 Bad Request", response_object
 
     def delete(self, id):
         try:
             return self.repositorioPartidos.delete(id)
         except Exception as ed:
-            response_object = {"message": 'Partido no pudo ser eliminado'}
-            return response_object, 400
+            response_object = {"message": 'El partido no pudo ser eliminado'}
+            return "HTTP 400 Bad Request", response_object

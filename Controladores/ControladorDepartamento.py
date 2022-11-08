@@ -11,7 +11,7 @@ class ControladorDepartamento():
     def create(self, infoDepartamento):
         if self.repositorioDepartamento.findByKey("nombre", infoDepartamento["nombre"]):
             response_object = {"message": f"El departamento ya existe"}
-            return response_object
+            return "HTTP 409 Conflict", response_object
         nuevoDepartamento = Departamento(infoDepartamento)
         return self.repositorioDepartamento.save(nuevoDepartamento)
 
@@ -21,7 +21,7 @@ class ControladorDepartamento():
             return elDepartamento.__dict__
         except Exception as ed:
             response_object = {"message": 'Departamento no encontrado'}
-            return response_object, 400
+            return "HTTP 400 Bad Request", response_object
 
     def update(self, id, infoDepartamento):
         try:
@@ -29,12 +29,12 @@ class ControladorDepartamento():
             departamentoActual.nombre = infoDepartamento["nombre"]
             return self.repositorioDepartamento.save(departamentoActual)
         except Exception as ed:
-            response_object = {"message": 'Departamento no pudo ser actualizado'}
-            return response_object, 400
+            response_object = {"message": 'EL departamento no pudo ser actualizado'}
+            return "HTTP 400 Bad Request", response_object
 
     def delete(self, id):
         try:
             return self.repositorioDepartamento.delete(id)
         except Exception as ed:
-            response_object = {"message": 'Departamento no pudo ser eliminado'}
-            return response_object, 400
+            response_object = {"message": 'El departamento no pudo ser eliminado'}
+            return "HTTP 400 Bad Request", response_object
