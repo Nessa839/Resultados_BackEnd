@@ -44,3 +44,13 @@ class RepositorioResultados(InterfaceRepositorio[Resultados]):
             })
         pipeline=  [query1]
         return self.queryAggregation(pipeline)
+
+    def getCongreso(self):
+        theQuery = self.baseDatos.resultados
+        data = []
+        for x in theQuery.find({},{"id_mesa":1, "votos":1}).limit(15).sort("votos",-1):
+            x["id_mesa"] = x["id_mesa"].__str__()
+            x = self.transformObjectIds(x)
+            x = self.getValuesDBRef(x)
+            data.append(x)
+        return data

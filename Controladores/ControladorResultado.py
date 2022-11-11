@@ -79,4 +79,6 @@ class ControladorResultado():
     def votosMasAltosPorMesas(self):
         return self.repositorioResultados.listadoMesas()
 
+    def integrantesCongreso(self):
+        return self.repositorioResultados.listadoMesas()
 

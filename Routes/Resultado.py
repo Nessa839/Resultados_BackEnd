@@ -42,18 +42,22 @@ def asignarRelacion(id, id_mesa, id_candidato):
     json = miControladorResultado.asignarRelacion(id, id_mesa, id_candidato)
     return jsonify(json)
 
-
+# Muestra resultado de las votaciones por mesa__________________________________________________
 @resultado.route("/resultados/resultados",methods=['GET'])
 def votosCandidato():
     json=miControladorResultado.listarResultadosDesc()
     return jsonify(json)
 
+# Muestra resultado de las votaciones por candidatos__________________________________________________
 @resultado.route("/resultados/candidatos",methods=['GET'])
 def getVotosDesc():
     json=miControladorResultado.votosMasAltosPorCandidato()
     return  jsonify(json)
 
+# Muestra resultado de las votaciones por mesa e inscritos__________________________________________________
 @resultado.route("/resultados/mesas",methods=['GET'])
 def getVotosMesaDesc():
     json=miControladorResultado.votosMasAltosPorMesas()
     return  jsonify(json)
+
+# Muestra resultado de los senadores en el congreso__________________________________________________
