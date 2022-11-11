@@ -46,16 +46,18 @@ class ControladorResultado():
 
     def asignarRelacion(self, id, id_mesa, id_candidato):
         try:
-            condicionCandidato = self.repositorioResultados.findById(id)['id_candidato']['_id'] == id_candidato
+            if 'id_candidato' in self.repositorioResultados.findById(id):
+                condicionCandidato = self.repositorioResultados.findById(id)['id_candidato']['_id'] == id_candidato
+                    
+                if condicionCandidato:
+                    response_object = {"message": "El candidato ya esta relacionado a un resultado"}
+                    return "HTTP 409 Conflict", response_object
+        
             condicionVotos = self.repositorioResultados.findById(id)['votos'] > self.repositorioMesa.findById(id_mesa)['numero_inscritos']
 
             if condicionVotos:
                 response_object = {"message": "El numero de votos es mayor a la cantidad de inscritos"}
-                return "HTTP 409 Conflict", response_object
-            
-            if condicionCandidato:
-                response_object = {"message": "El candidato ya esta relacionado a un resultado"}
-                return "HTTP 409 Conflict", response_object
+                return "HTTP 409 Conflict", response_object        
 
             resultadoActual = Resultados(self.repositorioResultados.findById(id))
             candidatoActual = Candidatos(self.repositorioCandidatos.findById(id_candidato))
