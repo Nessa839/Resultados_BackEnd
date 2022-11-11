@@ -68,3 +68,15 @@ class ControladorResultado():
         except:
             response_object = {"message": 'No fue posible asignar la relacion'}
             return "HTTP 400 Bad Request", response_object
+
+
+    def listarResultadosDesc(self):
+        return self.repositorioResultados.getListadoResultadosDesc()
+
+    def votosMasAltosPorCandidato(self):
+        return self.repositorioResultados.listadoVotosDesc()
+
+    def votosMasAltosPorMesas(self):
+        return self.repositorioResultados.listadoMesas()
+
+
