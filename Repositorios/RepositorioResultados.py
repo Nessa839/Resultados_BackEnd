@@ -1,56 +1,39 @@
 from Repositorios.InterfaceRepositorio import InterfaceRepositorio
 from Models.resultados import Resultados
+from bson import ObjectId
 
 class RepositorioResultados(InterfaceRepositorio[Resultados]):
     pass
 
-    def getListadoResultadosDesc(self):
-        theQuery = self.baseDatos.resultados
-        data = []
-        for x in theQuery.find({},{"id_mesa":1, "votos":1}).sort("votos",-1):
-            x["id_mesa"] = x["id_mesa"].__str__()
-            x = self.transformObjectIds(x)
-            x = self.getValuesDBRef(x)
-            data.append(x)
-        return data
 
-    def listadoVotosDesc(self):
-        query1=(
-
-            {
-                "$group": {
-                    "_id": "$id_candidato",
-                    "Total_votos": {
-                        "$sum": "$votos"
-                    }
-                }
-            })
-        pipeline=  [query1]
+    def sumaVotosCandidato(self):
+        query1 = {'$lookup': {'from': 'mesa', 'localField': 'id_mesa.$id', 'foreignField': '_id', 'as': 'result1'}}
+        query2 = {'$lookup': {'from': 'candidatos', 'localField': 'id_candidato.$id', 'foreignField': '_id', 'as': 'result2'}}
+        query3 = {'$lookup': {'from': 'partidos', 'localField': 'result2.id_partido.$id', 'foreignField': '_id', 'as': 'result3'}}
+        query4 = {'$group': {'_id': {'apellido': '$result2.apellido', 'nombre': '$result2.nombre', 'partido': '$result3.nombre', 'mesa': '$result.numero_mesa'}, 'suma': {'$sum': '$votos'}}}
+        query5 = {'$sort': {'suma': -1}}
+        pipeline = [query1,query2,query3,query4,query5]
         return self.queryAggregation(pipeline)
 
-    def listadoMesas(self):
-        query1=(
-
-            {
-                "$group": {
-                    "_id": "$id_mesa",
-                    "Total_votos": {
-                        "$sum": "$votos"
-                    },
-                    "Total_inscritos": {
-                        "$sum": "$numero_inscritos"
-                    }
-                }
-            })
-        pipeline=  [query1]
+    def sumaVotosMesas(self):
+        query1 = {'$lookup': {'from': 'mesa', 'localField': 'id_mesa.$id', 'foreignField': '_id', 'as': 'result1'}}
+        query2 = {'$group': {'_id': {'mesa': '$result1.numero_mesa'}, 'suma': {'$sum': '$votos'}}}
+        query3 = {'$sort': {'suma': 1}}
+        pipeline = [query1,query2,query3]
         return self.queryAggregation(pipeline)
 
-    def getCongreso(self):
-        theQuery = self.baseDatos.resultados
-        data = []
-        for x in theQuery.find({},{"id_mesa":1, "votos":1}).limit(15).sort("votos",-1):
-            x["id_mesa"] = x["id_mesa"].__str__()
-            x = self.transformObjectIds(x)
-            x = self.getValuesDBRef(x)
-            data.append(x)
-        return data
+    def sumaVotosPartidos(self):
+        query1 = {'$lookup': {'from': 'candidatos', 'localField': 'id_candidato.$id', 'foreignField': '_id', 'as': 'result1'}}
+        query2 = {'$lookup': {'from': 'partidos', 'localField': 'result1.id_partido.$id', 'foreignField': '_id', 'as': 'result2'}}
+        query3 = {'$group': {'_id': { 'partido': '$result2.nombre'}, 'suma': {'$sum': '$votos'}}}
+        query4 = {'$sort': {'suma': -1}}
+        pipeline = [query1,query2,query3,query4]
+        return self.queryAggregation(pipeline)
+
+    def cuentaCongreso(self):
+        query1 = {'$lookup': {'from': 'candidatos', 'localField': 'id_candidato.$id', 'foreignField': '_id', 'as': 'result1'}}
+        query2 = {'$lookup': {'from': 'partidos', 'localField': 'result1.id_partido.$id', 'foreignField': '_id', 'as': 'result2'}}
+        query3 = {'$group': {'_id': { 'partido': '$result2.nombre'}, 'suma': {'$count': '$votos'}}}
+        query4 = {'$sort': {'suma': -1}}
+        pipeline = [query1,query2,query3,query4]
+        return self.queryAggregation(pipeline)

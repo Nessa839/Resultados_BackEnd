@@ -34,7 +34,7 @@ def modificarResultados(id):
 @resultado.route("/resultados/<string:id>", methods=['DELETE'])
 def eliminarResultados(id):
     json = miControladorResultado.delete(id)
-    return jsonify(json)
+    return (json)
 
 
 @resultado.route("/resultados/<string:id>/mesas/<string:id_mesa>/candidatos/<string:id_candidato>", methods=['PUT'])
@@ -43,21 +43,22 @@ def asignarRelacion(id, id_mesa, id_candidato):
     return jsonify(json)
 
 # Muestra resultado de las votaciones por mesa__________________________________________________
-@resultado.route("/resultados/resultados",methods=['GET'])
-def votosCandidato():
-    json=miControladorResultado.listarResultadosDesc()
+@resultado.route("/resultados/votos",methods=['GET'])
+def getSumaVotosCandidatos():
+    json=miControladorResultado.VotosCandidatos()
     return jsonify(json)
 
-# Muestra resultado de las votaciones por candidatos__________________________________________________
-@resultado.route("/resultados/candidatos",methods=['GET'])
-def getVotosDesc():
-    json=miControladorResultado.votosMasAltosPorCandidato()
-    return  jsonify(json)
-
-# Muestra resultado de las votaciones por mesa e inscritos__________________________________________________
 @resultado.route("/resultados/mesas",methods=['GET'])
-def getVotosMesaDesc():
-    json=miControladorResultado.votosMasAltosPorMesas()
-    return  jsonify(json)
+def getSumaVotosMesas():
+    json=miControladorResultado.VotosMesa()
+    return jsonify(json)
 
-# Muestra resultado de los senadores en el congreso__________________________________________________
+@resultado.route("/resultados/partidos",methods=['GET'])
+def getVotosPartido():
+    json=miControladorResultado.votosPartidos()
+    return jsonify(json)
+
+@resultado.route("/resultados/congreso",methods=['GET'])
+def getCongreso():
+    json=miControladorResultado.congreso()
+    return jsonify(json)

@@ -70,15 +70,14 @@ class ControladorResultado():
             return "HTTP 400 Bad Request", response_object
 
 
-    def listarResultadosDesc(self):
-        return self.repositorioResultados.getListadoResultadosDesc()
+    def VotosCandidatos(self):
+        return self.repositorioResultados.sumaVotosCandidato()
 
-    def votosMasAltosPorCandidato(self):
-        return self.repositorioResultados.listadoVotosDesc()
+    def VotosMesa(self):
+        return self.repositorioResultados.sumaVotosMesas()
 
-    def votosMasAltosPorMesas(self):
-        return self.repositorioResultados.listadoMesas()
+    def votosPartidos(self):
+        return self.repositorioResultados.sumaVotosPartidos()
 
-    def integrantesCongreso(self):
-        return self.repositorioResultados.listadoMesas()
-
+    def congreso(self):
+        return self.repositorioResultados.cuentaCongreso()
