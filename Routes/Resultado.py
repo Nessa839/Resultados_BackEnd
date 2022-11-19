@@ -57,3 +57,8 @@ def getVotosDesc():
 def getVotosMesaDesc():
     json=miControladorResultado.votosMasAltosPorMesas()
     return  jsonify(json)
+
+@resultado.route("/resultados/listado_votos",methods=['GET'])
+def getListadoVotosMesas():
+    json=miControladorResultado.listarVotosMesas()
+    return jsonify(json)

@@ -79,4 +79,7 @@ class ControladorResultado():
     def votosMasAltosPorMesas(self):
         return self.repositorioResultados.listadoMesas()
 
+    def listarVotosMesas(self):
+        return self.repositorioResultados.listadoVotosDesc()
+
 

@@ -19,7 +19,7 @@ class RepositorioResultados(InterfaceRepositorio[Resultados]):
 
             {
                 "$group": {
-                    "_id": "$id_candidato",
+                    "id_mesa": "$mesa",
                     "Total_votos": {
                         "$sum": "$votos"
                     }
