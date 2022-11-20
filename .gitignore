@@ -253,5 +253,11 @@ cython_debug/
 .env.local
 .env.*.local
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
 # End of https://www.toptal.com/developers/gitignore/api/python,flask
 
