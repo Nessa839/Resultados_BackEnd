@@ -31,9 +31,32 @@ class RepositorioResultados(InterfaceRepositorio[Resultados]):
         return self.queryAggregation(pipeline)
 
     def cuentaCongreso(self):
-        query1 = {'$lookup': {'from': 'candidatos', 'localField': 'id_candidato.$id', 'foreignField': '_id', 'as': 'result1'}}
-        query2 = {'$lookup': {'from': 'partidos', 'localField': 'result1.id_partido.$id', 'foreignField': '_id', 'as': 'result2'}}
-        query3 = {'$group': {'_id': { 'partido': '$result2.nombre'}, 'suma': {'$count': '$votos'}}}
-        query4 = {'$sort': {'suma': -1}}
-        pipeline = [query1,query2,query3,query4]
+        query1 = {'$lookup': {'from': 'candidatos', 'localField': 'id_candidato.$id', 'foreignField': '_id', 'as': 'result' }}
+        query2 = {'$lookup': {'from': 'partidos', 'localField': 'result.id_partido.$id', 'foreignField': '_id', 'as': 'result2'}}
+        query3 = {'$sort': {'votos': -1}}
+        query4 = {'$limit': 15}
+        query5 = {'$group': {'_id': {'partido': '$result2.nombre'}, 'representantes': {'$sum': 1}}}
+        query6 = {
+        '$project': {
+            'sum': '$representantes',
+            'Porcentaje': {
+                '$concat': [
+                    {
+                        '$substr': [
+                            {
+                                '$multiply': [
+                                    {
+                                        '$divide': [
+                                            '$representantes', 15
+                                        ]
+                                    }, 100
+                                ]
+                            }, 0, 4
+                        ]
+                    }, ' ', '%'
+                ]
+            }
+        }
+    }
+        pipeline = [query1,query2,query3,query4,query5,query6]
         return self.queryAggregation(pipeline)
