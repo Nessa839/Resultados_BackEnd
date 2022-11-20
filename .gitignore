@@ -255,6 +255,7 @@ cython_debug/
 
 ### IntelliJ IDEA ###
 .idea
+.idea/
 *.iws
 *.iml
 *.ipr
